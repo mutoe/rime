@@ -1,0 +1,13 @@
+# OS & IDE
+.DS_Store
+.idea
+.vscode
+
+# profile
+build
+sync
+installation.yaml
+user.yaml
+
+# user db
+*.userdb
