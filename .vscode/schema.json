@@ -1,0 +1,650 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "properties": {
+    "schema": {
+      "type": "object",
+      "description": "描述檔",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "方案的顯示名偁〔即出現於方案選單中以示人的，通常爲中文〕"
+        },
+        "schema_id": {
+          "type": "string",
+          "description": "方案內部名，在代碼中引用此方案時以此名爲正，通常由英文、數字、下劃線組成"
+        },
+        "author": {
+          "type": "array",
+          "description": "發明人、撰寫者。如果您對方案做出了修改，請保留原作者名，並將自己的名字加在後面",
+          "items": {
+            "type": "string"
+          }
+        },
+        "description": {
+          "type": "string",
+          "description": "請簡要描述方案歷史、碼表來源、該方案規則等"
+        },
+        "dependencies": {
+          "type": "array",
+          "description": "如果本方案依賴於其它方案〔通常來說會依頼其它方案做爲反查，抑或是兩種或多種方案混用時〕",
+          "items": {
+            "type": "string"
+          }
+        },
+        "version": {
+          "type": "string",
+          "description": "版本號，在發佈新版前請確保已陞版本號"
+        }
+      }
+    },
+    "switches": {
+      "type": "array",
+      "description": "通常包含以下五個：\nascii_mode 是中英文轉換開關。預設0爲中文，1爲英文\nfull_shape 是全角符號／半角符號開關。注意，開啓全角時英文字母亦爲全角。0爲半角，1爲全角\nextended_charset 是字符集開關。0爲CJK基本字符集，1爲CJK全字符集(僅table_translator可用)\nsimplification 是轉化字開關。一般情況下與上同，0爲不開啓轉化，1爲轉化。\nascii_punct 是中西文標點轉換開關，0爲中文句讀，1爲西文標點。",
+      "additionalProperties": false,
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "states": {
+            "type": "array",
+            "description": "可不寫，如不寫則此開關存在但不可見，可由快捷鍵操作",
+            "items": { "type": "string" },
+            "additionalProperties": true
+          },
+          "reset": {
+            "type": "number",
+            "description": "設定默認狀態〔reset可不寫，此時切換窗口時不會重置到默認狀態〕",
+            "additionalProperties": true
+          }
+        }
+      }
+    },
+    "engine": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "processors": {
+          "type": "array",
+          "description": "這批組件處理各類按鍵消息",
+          "items": {
+            "oneOf": [
+              {
+                "enum": ["ascii_composer"],
+                "description": "處理西文模式及中西文切"
+              },
+              {
+                "enum": ["recognizer"],
+                "description": "與matcher搭配，處理符合特定規則的輸入碼，如網址、反查等tags"
+              },
+              {
+                "enum": ["key_binder"],
+                "description": "在特定條件下將按鍵綁定到其他按鍵，如重定義逗號、句號爲候選翻頁、開關快捷鍵等"
+              },
+              {
+                "enum": ["speller"],
+                "description": "拼寫處理器，接受字符按鍵，編輯輸入"
+              },
+              {
+                "enum": ["punctuator"],
+                "description": "句讀處理器，將單個字符按鍵直接映射爲標點符號或文字"
+              },
+              {
+                "enum": ["selector"],
+                "description": "選字處理器，處理數字選字鍵〔可以換成別的哦〕、上、下候選定位、換頁"
+              },
+              {
+                "enum": ["navigator"],
+                "description": "處理輸入欄內的光標移動"
+              },
+              {
+                "enum": ["express_editor"],
+                "description": "編輯器，處理空格、回車上屏、回退鍵"
+              },
+              {
+                "enum": ["fluid_editor", "fluency_editor"],
+                "description": "句式編輯器，用於以空格斷詞、回車上屏的【注音】、【語句流】等輸入方案，替換express_editor"
+              },
+              {
+                "enum": ["chord_composer"],
+                "description": "和絃作曲家或曰並擊處理器，用於【宮保拼音】等多鍵並擊的輸入方案"
+              }
+            ]
+          }
+        },
+        "segmentors": {
+          "type": "array",
+          "description": "這批組件識別不同內容類型，將輸入碼分段並加上 tag",
+          "items": {
+            "oneOf": [
+              {
+                "enum": ["ascii_segmentor"],
+                "description": "標識西文段落〔譬如在西文模式下〕字母直接上屛"
+              },
+              {
+                "enum": ["matcher"],
+                "description": "配合recognizer標識符合特定規則的段落，如網址、反查等，加上特定tag"
+              },
+              {
+                "enum": ["abc_segmentor"],
+                "description": "標識常規的文字段落，加上abc這個tag"
+              },
+              {
+                "enum": ["punct_segmentor"],
+                "description": "標識句讀段落〔鍵入標點符號用〕加上punct這個tag"
+              },
+              {
+                "enum": ["fallback_segmentor"],
+                "description": "標識其他未標識段落"
+              },
+              {
+                "enum": ["affix_segmentor"],
+                "description": "用戶自定義tag"
+              }
+            ]
+          }
+        },
+        "translators": {
+          "type": "array",
+          "description": "這批組件翻譯特定類型的編碼段爲一組候選文字",
+          "items": {
+            "oneOf": [
+              {
+                "enum": ["echo_translator"],
+                "description": "沒有其他候選字時，回顯輸入碼〔輸入碼可以Shift+Enter上屛〕"
+              },
+              {
+                "enum": ["punct_translator"],
+                "description": "配合punct_segmentor轉換標點符號"
+              },
+              {
+                "enum": ["table_translator"],
+                "description": "碼表翻译器，用於倉頡、五筆等基於碼表的輸入方案 \n - 此項可加載多個實例，後接@+翻译器名〔如：cangjie、wubi等〕"
+              },
+              {
+                "pattern": "^table_translator@\\w+",
+                "description": "碼表翻译器，用於倉頡、五筆等基於碼表的輸入方案 \n - 此項可加載多個實例，後接@+翻译器名〔如：cangjie、wubi等〕"
+              },
+              {
+                "enum": ["script_translator"],
+                "description": "腳本翻译器，用於拼音、粵拼等基於音節表的輸入方案\n - 此項可加載多個實例，後接@+翻译器名〔如：pinyin、jyutping等〕"
+              },
+              {
+                "pattern": "^script_translator@\\w+",
+                "description": "腳本翻译器，用於拼音、粵拼等基於音節表的輸入方案\n - 此項可加載多個實例，後接@+翻译器名〔如：pinyin、jyutping等〕"
+              },
+              {
+                "enum": ["reverse_lookup_translator"],
+                "description": "反查翻译器，用另一種編碼方案查碼"
+              }
+            ]
+          }
+        },
+        "filters": {
+          "type": "array",
+          "description": "這批組件過濾翻譯的結果",
+          "items": {
+            "oneOf": [
+              {
+                "enum": ["simplifier"],
+                "description": "用字轉換"
+              },
+              {
+                "pattern": "^simplifier@\\w+",
+                "description": "用字轉換"
+              },
+              {
+                "enum": ["uniquifier"],
+                "description": "過濾重複的候選字，有可能來自simplifier"
+              },
+              {
+                "enum": ["cjk_minifier"],
+                "description": "字符集過濾〔用於script_translator，使之支援extended_charset開關〕"
+              },
+              {
+                "enum": ["reverse_lookup_filter"],
+                "description": "反查濾鏡，以更靈活的方式反查，Rime1.0後替代reverse_lookup_translator \n(此項可加載多個實例，後接@+濾鏡名〔如：pinyin_lookup、jyutping_lookup等〕)"
+              },
+              {
+                "enum": ["single_char_filter"],
+                "description": "單字過濾器，如加載此組件，則屛敝詞典中的詞組〔僅table_translator有效〕"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "speller": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "alphabet": {
+          "type": "string",
+          "description": "定義本方案輸入鍵"
+        },
+        "initials": {
+          "type": "string",
+          "description": "定義僅作始碼之鍵"
+        },
+        "finals": {
+          "type": "string",
+          "description": "定義僅作末碼之鍵"
+        },
+        "delimiter": {
+          "type": "string",
+          "description": "上屛時的音節間分音符"
+        },
+        "max_code_length": {
+          "type": "number",
+          "description": "形碼最大碼長，超過則頂字上屛〔number〕"
+        },
+        "auto_select": {
+          "type": "boolean",
+          "description": "自動上屛〔true或false〕"
+        },
+        "auto_select_pattern": {
+          "type": "string",
+          "description": "自動上屏規則，以正則表達式描述，當輸入串可以被匹配時自動頂字上屏。 "
+        },
+        "use_space": {
+          "type": "boolean",
+          "description": "以空格作輸入碼〔true或false〕"
+        },
+        "algebra": {
+          "$ref": "#/definitions/algebra"
+        }
+      }
+    },
+    "translator": {
+      "type": "object",
+      "description": "每個方案有一個主translator，在引擎列表中不以@+翻译器名定義，在細項配置時直接以translator:命名。",
+      "oneOf": [{ "$ref": "#/definitions/translator_main_props" }]
+    },
+    "simplifier": {
+      "type": "object",
+      "properties": {
+        "option_name": {
+          "type": "string",
+          "description": "對應switches中設定的切換項名"
+        },
+        "opencc_config": {
+          "type": "string",
+          "description": "用字轉換配置文件 位於：rime_dir/opencc/"
+        },
+        "tags": {
+          "type": "array",
+          "description": "設定轉換範圍",
+          "items": { "type": "string" }
+        },
+        "tips": {
+          "enum": ["none", "char", "all"],
+          "description": "設定是否提示轉換前的字，可塡none〔或不塡〕、char〔僅對單字有效〕、all"
+        },
+        "show_in_comment": {
+          "type": "boolean",
+          "description": "設定是否僅將轉換結果顯示在備注中"
+        },
+        "excluded_types": {}
+      }
+    },
+    "chord_composer": {
+      "type": "object",
+      "description": "並擊把鍵盤分兩半，相當於兩塊鍵盤。兩邊同時擊鍵，系統默認在其中一半上按的鍵先於另一半，由此得出上屛碼",
+      "properties": {
+        "alphabet": {
+          "type": "string",
+          "description": "字母表，包含用於並擊的按鍵。擊鍵雖有先後，形成並擊時，一律以字母表順序排列"
+        },
+        "algebra": {
+          "$ref": "#/definitions/algebra",
+          "description": "拼寫運算規則，將一組並擊編碼轉換爲拼音音節"
+        },
+        "output_format": {
+          "$ref": "#/definitions/algebra",
+          "description": "並擊完成後套用的式樣，追加隔音符號"
+        },
+        "prompt_format": {
+          "$ref": "#/definitions/algebra",
+          "description": "並擊過程中套用的式樣，加方括弧 "
+        }
+      }
+    },
+    "recognizer": {
+      "type": "object",
+      "properties": {
+        "import_preset": {
+          "type": "string"
+        },
+        "patterns": {
+          "type": "object",
+          "description": "配合segmentor的prefix和suffix完成段落劃分"
+        }
+      }
+    },
+    "key_binder": {
+      "type": "object",
+      "properties": {
+        "import_preset": { "type": "string" },
+        "bindings": { "$ref": "#/definitions/bindings" }
+      }
+    },
+    "editor": {
+      "type": "object",
+      "properties": {
+        "bindings": { "$ref": "#/definitions/bindings" }
+      }
+    },
+    "punctuator": {
+      "type": "object",
+      "properties": {
+        "import_preset": { "type": "string" },
+        "half_shape": {
+          "type": "object"
+        }
+      }
+    },
+    "customization": {
+      "type": "number"
+    }
+  },
+  "patternProperties": {
+    "^[\\w-]+$": {
+      "type": "object",
+      "description": "附加translator",
+      "allOf": [
+        { "$ref": "#/definitions/translator_main_props" },
+        { "$ref": "#/definitions/translator_sub_props" },
+        {
+          "properties": {
+            "tags": {
+              "type": "array",
+              "description": "設定其作用範圍",
+              "items": { "type": "string" }
+            },
+            "overwrite_comment": {
+              "type": "boolean",
+              "description": "是否覆蓋其他提示"
+            },
+            "dictionary": {
+              "type": "string",
+              "description": "反查所得提示碼之碼表"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "algebra": {
+      "type": "array",
+      "description": "拼寫運算規則，由之算出的拼寫匯入prism中",
+      "items": {
+        "description": "xform --改寫〔不保留原形〕\nderive --衍生〔保留原形〕\nabbrev --簡拼〔出字優先級較上兩組更低〕\nfuzz --畧拼〔此種簡拼僅組詞，不出單字〕\nxlit --變換〔適合大量一對一變換〕\nerase --刪除",
+        "pattern": "^(?:erase|derive|abbrev|derive|fuzz|xform|xlit)([|/]).*\\1"
+      }
+    },
+    "translator_main_props": {
+      "type": "object",
+      "properties": {
+        "enable_charset_filter": {
+          "type": "boolean",
+          "description": "是否開啓字符集過濾〔僅table_translator有效。啓用cjk_minifier後可適用於script_translator〕"
+        },
+        "enable_encoder": {
+          "type": "boolean",
+          "description": "是否開啓自動造詞〔僅table_translator有效〕"
+        },
+        "encode_commit_history": {
+          "type": "boolean",
+          "description": "是否對已上屛詞自動成詞〔僅table_translator有效〕"
+        },
+        "max_phrase_length": {
+          "type": "number",
+          "description": "最大自動成詞詞長〔僅table_translator有效〕"
+        },
+        "enable_completion": {
+          "type": "boolean",
+          "description": "提前顯示尚未輸入完整碼的字〔僅table_translator有效〕"
+        },
+        "sentence_over_completion": {
+          "type": "boolean",
+          "description": "在無全碼對應字而僅有逐鍵提示時也開啓智能組句〔僅table_translator有效〕"
+        },
+        "strict_spelling": {
+          "type": "boolean",
+          "description": "配合speller中的fuzz規則，僅以畧拼碼組詞〔僅table_translator有效〕"
+        },
+        "disable_user_dict_for_patterns": {
+          "type": "array",
+          "description": "禁止某些編碼錄入用戶詞典",
+          "items": { "type": "string" }
+        },
+        "enable_sentence": {
+          "type": "boolean",
+          "description": "是否開啓自動造句"
+        },
+        "enable_user_dict": {
+          "type": "boolean",
+          "description": "是否開啓用戶詞典〔用戶詞典記錄動態字詞頻、用戶詞〕"
+        },
+        "dictionary": {
+          "type": "string",
+          "description": "翻译器將調取此字典文件"
+        },
+        "prism": {
+          "type": "string",
+          "description": "設定由此主翻译器的speller生成的滤镜文件名，或此副編譯器調用的滤镜名"
+        },
+        "user_dict": {
+          "type": "string",
+          "description": "設定用戶詞典名"
+        },
+        "db_class": {
+          "type": "string",
+          "description": "設定用戶詞典類型，可設tabledb〔文本〕或userdb〔二進制〕"
+        },
+        "spelling_hints": {
+          "type": "number",
+          "description": "設定多少字以內候選標註完整帶調拼音〔僅script_translator有效〕"
+        },
+        "initial_quality": {
+          "type": "number",
+          "description": "設定此翻译器出字優先級"
+        },
+        "preedit_format": {
+          "description": "上屛碼自定義",
+          "oneOf": [{ "$ref": "#/definitions/algebra" }, { "type": "object" }]
+        },
+        "comment_format": {
+          "$ref": "#/definitions/algebra",
+          "description": "提示碼自定義"
+        }
+      }
+    },
+    "translator_sub_props": {
+      "type": "object",
+      "properties": {
+        "tag": {
+          "type": "string",
+          "description": "設定此翻译器針對的tag。可不塡，不塡則僅針對abc"
+        },
+        "prefix": {
+          "type": "string",
+          "description": "設定此翻译器的前綴標識，可不塡，不塡則無前綴"
+        },
+        "suffix": {
+          "type": "string",
+          "description": "設定此翻译器的尾綴標識，可不塡，不塡則無尾綴"
+        },
+        "tips": {
+          "type": "string",
+          "description": "設定此翻译器的輸入前提示符，可不塡，不塡則無提示符"
+        },
+        "closing_tips": {
+          "type": "string",
+          "description": "設定此翻译器的結束輸入提示符，可不塡，不塡則無提示符"
+        }
+      }
+    },
+    "switch_names": {
+      "enum": [
+        "ascii_mode",
+        "full_shape",
+        "extended_charset",
+        "simplification",
+        "ascii_punct"
+      ]
+    },
+    "bindings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "accept": {
+            "$ref": "#/definitions/keys",
+            "description": "實際所按之鍵"
+          },
+          "when": {
+            "enum": ["paging", "has_menu", "composing", "always"],
+            "description": "作用範圍"
+          },
+          "toggle": {
+            "$ref": "#/definitions/switch_names",
+            "description": "切換開關 可用字段包含五個開關名 〔send和toggle二選一〕"
+          },
+          "send": {
+            "$ref": "#/definitions/keys",
+            "description": "輸出效果〔send和toggle二選一〕"
+          }
+        },
+        "not": { "required": ["send", "toggle"] }
+      }
+    },
+    "keys": {
+      "enum": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        "BackSpace",
+        "Tab",
+        "Linefeed",
+        "Clear",
+        "Return",
+        "Pause",
+        "Sys_Req",
+        "Escape",
+        "Delete",
+        "Home",
+        "Left",
+        "Up",
+        "Right",
+        "Down",
+        "Prior",
+        "Page_Up",
+        "Next",
+        "Page_Down",
+        "End",
+        "Begin",
+        "Shift_L",
+        "Shift_R",
+        "Control_L",
+        "Control_R",
+        "Meta_L",
+        "Meta_R",
+        "Alt_L",
+        "Alt_R",
+        "Super_L",
+        "Super_R",
+        "Hyper_L",
+        "Hyper_R",
+        "Caps_Lock",
+        "Shift_Lock",
+        "Scroll_Lock",
+        "Num_Lock",
+        "Select",
+        "Print",
+        "Execute",
+        "Insert",
+        "Undo",
+        "Redo",
+        "Menu",
+        "Find",
+        "Cancel",
+        "Help",
+        "Break",
+        "space",
+        "exclam",
+        "quotedbl",
+        "numbersign",
+        "dollar",
+        "percent",
+        "ampersand",
+        "apostrophe",
+        "parenleft",
+        "parenright",
+        "asterisk",
+        "plus",
+        "comma",
+        "minus",
+        "period",
+        "slash",
+        "colon",
+        "semicolon",
+        "less",
+        "equal",
+        "greater",
+        "question",
+        "at",
+        "bracketleft",
+        "backslash",
+        "bracketright",
+        "asciicircum",
+        "underscore",
+        "grave",
+        "braceleft",
+        "bar",
+        "braceright",
+        "asciitilde",
+        "KP_Space",
+        "KP_Tab",
+        "KP_Enter",
+        "KP_Delete",
+        "KP_Home",
+        "KP_Left",
+        "KP_Up",
+        "KP_Right",
+        "KP_Down",
+        "KP_Prior",
+        "KP_Page_Up",
+        "KP_Next",
+        "KP_Page_Down",
+        "KP_End",
+        "KP_Begin",
+        "KP_Insert",
+        "KP_Equal",
+        "KP_Multiply",
+        "KP_Add",
+        "KP_Subtract",
+        "KP_Divide",
+        "KP_Decimal",
+        "KP_0",
+        "KP_1",
+        "KP_2",
+        "KP_3",
+        "KP_4",
+        "KP_5",
+        "KP_6",
+        "KP_7",
+        "KP_8",
+        "KP_9"
+      ]
+    }
+  }
+}

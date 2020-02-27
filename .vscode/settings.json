@@ -1,0 +1,7 @@
+{
+  "editor.insertSpaces": false,
+  "yaml.schemas": {
+    "./.vscode/schema.json": ["/*.schema.yaml"],
+    "./.vscode/custom.json": ["/*.custom.yaml"]
+  }
+}
