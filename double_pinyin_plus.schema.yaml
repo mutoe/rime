@@ -4,7 +4,7 @@
 schema:
   schema_id: double_pinyin_plus
   name: 自然码双拼+
-  version: "0.15.custom.mutoe.3"
+  version: "0.15.custom.mutoe.4"
   author:
     - 佛振 <chen.sst@gmail.com>
     - mutoe <mutoe@foxmail.com>
@@ -13,6 +13,7 @@ schema:
     - 增加自定义词库(custom phrase)。
     - 增加英文输入支持
     - 增加自然码辅码支持(自然码2000)
+    - 增加 Emoji 支持
   dependencies:
     - stroke
     - zrm2000
@@ -29,6 +30,9 @@ switches:
     states: [ 漢字, 汉字 ]
   - name: ascii_punct
     states: [ 。，, ．， ]
+  - name: emoji_suggestion
+    reset: 1
+    states: [ "🈚️️\uFE0E", "🈶️️\uFE0F" ]
 
 engine:
   processors:
@@ -54,6 +58,7 @@ engine:
     - table_translator@zrm2000
     - script_translator
   filters:
+    - simplifier@emoji_suggestion
     - simplifier
     - uniquifier
 
@@ -74,8 +79,11 @@ english:
 
 zrm2000:
   dictionary: zrm2000
-  enable_sentence: true
-  max_phrase_length: 6
+
+emoji_suggestion:
+  opencc_config: emoji.json
+  option_name: emoji_suggestion
+  tips: all
 
 speller:
   alphabet: zyxwvutsrqponmlkjihgfedcba.,

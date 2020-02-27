@@ -18,10 +18,3 @@ patch:
       - xlit/hspnz/一丨丿丶乙/
     comment_format:
       - xform/([nl])v/$1ü/
-
-# Emoji inject
-__patch:
-# Rx: emoji:customize:schema=double_pinyin_plus {
-  - patch/+:
-      __include: emoji_suggestion:/patch
-# }
