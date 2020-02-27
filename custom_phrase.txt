@@ -1,0 +1,14 @@
+# Rime table
+# coding: utf-8
+#@/db_name  custom_phrase.txt
+#@/db_type	tabledb
+#
+# 碼表各字段以製表符（Tab）分隔
+# 順序爲：文字、編碼、權重（決定重碼的次序、可選）
+#
+# 出現在這一行註釋之後的 # 不再當作註釋。
+# no comment
+
+Rime 输入法引擎	rime	3
+Rime Input Method Engine	rime	2
+http://code.google.com/p/rimeime/	rime	1
