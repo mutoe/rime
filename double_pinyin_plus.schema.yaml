@@ -132,17 +132,6 @@ translator:
     - xform/([jqxy])v/$1u/
     - xform/([nl])v/$1ü/
 
-reverse_lookup:
-  dictionary: stroke
-  enable_completion: true
-  prefix: "`"
-  suffix: "'"
-  tips: 〔筆畫〕
-  preedit_format:
-    - xlit/hspnz/一丨丿丶乙/
-  comment_format:
-    - xform/([nl])v/$1ü/
-
 punctuator:
   import_preset: default
 
@@ -151,5 +140,3 @@ key_binder:
 
 recognizer:
   import_preset: default
-  patterns:
-    reverse_lookup: "`[a-z]*'?$"
