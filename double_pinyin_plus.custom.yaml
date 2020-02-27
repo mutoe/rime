@@ -1,0 +1,3 @@
+patch:
+  # 扩充词库
+  "translator/dictionary": luna_pinyin.extended
