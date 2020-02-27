@@ -4,15 +4,17 @@
 schema:
   schema_id: double_pinyin_plus
   name: 自然码双拼+
-  version: "0.15.custom.mutoe.1"
+  version: "0.15.custom.mutoe.2"
   author:
     - 佛振 <chen.sst@gmail.com>
     - mutoe <mutoe@foxmail.com>
   description: |
     基于朙月拼音＋自然碼雙拼原方案。
     - 增加自定义词库(custom phrase)。
+    - 增加英文输入支持
   dependencies:
     - stroke
+    - english
 
 switches:
   - name: ascii_mode
@@ -45,6 +47,7 @@ engine:
   translators:
     - punct_translator
     - reverse_lookup_translator
+    - table_translator@english
     - table_translator@custom_phrase
     - script_translator
   filters:
@@ -58,6 +61,13 @@ custom_phrase:
   enable_sentence: false
   initial_quality: 1
   user_dict: custom_phrase
+
+english:
+  dictionary: english
+  enable_completion: true
+  enable_sentence: true
+  spelling_hints: 9
+  initial_quality: 0
 
 speller:
   alphabet: zyxwvutsrqponmlkjihgfedcba
