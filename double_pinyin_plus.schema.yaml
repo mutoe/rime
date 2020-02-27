@@ -4,14 +4,14 @@
 schema:
   schema_id: double_pinyin_plus
   name: 自然码双拼+
-  version: "0.15.custom.mutoe.5"
+  version: "0.15.custom.mutoe.6"
   author:
     - 佛振 <chen.sst@gmail.com>
     - mutoe <mutoe@foxmail.com>
   description: |
     基于朙月拼音＋自然碼雙拼原方案。
     - 增加自定义词库(custom phrase)。
-    - 增加英文输入支持
+    - 增加英文输入支持，支持大写字母
     - 增加自然码辅码支持(自然码2000)
     - 增加 Emoji 支持
   dependencies:
@@ -87,8 +87,8 @@ emoji_suggestion:
   tips: all
 
 speller:
-  alphabet: zyxwvutsrqponmlkjihgfedcba.,
-  initials: abcdefghijklmnopqrstuvwxyz
+  alphabet: zyxwvutsrqponmlkjihgfedcbaZYXWVUTSRQPONMLKJIHGFEDCBA.,
+  initials: zyxwvutsrqponmlkjihgfedcbaZYXWVUTSRQPONMLKJIHGFEDCBA
   delimiter: " '"
   algebra:
     - erase/^xx$/
