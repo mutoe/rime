@@ -6,6 +6,9 @@ patch:
   punctuator/import_preset: symbols
   recognizer/patterns/punct: "^/([A-Z|a-z]*|[0-9]|10)$"
 
+  # 自动造句 (阴阳鱼☯️️ 图标)
+  zrm2000/enable_sentence: true
+
   # 笔画反查
   recognizer/patterns/reverse_lookup: "`b[a-z]*'?$"
   reverse_lookup:

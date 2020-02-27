@@ -4,7 +4,7 @@
 schema:
   schema_id: double_pinyin_plus
   name: 自然码双拼+
-  version: "0.15.custom.mutoe.4"
+  version: "0.15.custom.mutoe.5"
   author:
     - 佛振 <chen.sst@gmail.com>
     - mutoe <mutoe@foxmail.com>
@@ -73,12 +73,13 @@ custom_phrase:
 english:
   dictionary: english
   enable_completion: true
-  enable_sentence: true
-  spelling_hints: 9
+  enable_sentence: false
   initial_quality: 0
 
 zrm2000:
   dictionary: zrm2000
+  enable_sentence: false
+  max_phrase_length: 8
 
 emoji_suggestion:
   opencc_config: emoji.json
