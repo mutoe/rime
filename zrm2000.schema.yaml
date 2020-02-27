@@ -1,0 +1,72 @@
+﻿# Rime schema settings
+# vim: set sw=2 sts=2 et:
+# encoding: utf-8
+
+schema:
+  schema_id: zrm2000
+  name: "自然码"
+  version: "2009新春版"
+  author:
+    - "发明人: 周志农 先生"
+  description: |
+    描　述: 自然码输入系统2000, 2009新春版
+    码　表: 《自然码2009新春版》V7.27
+    网　址: http://www.zrm.com.cn/
+
+switches:
+  - name: ascii_mode
+    reset: 0
+    states: [ 中文, 西文 ]
+  - name: full_shape
+    states: [ 半角, 全角 ]
+
+engine:
+  processors:
+    - ascii_composer
+    - recognizer
+    - key_binder
+    - speller
+    - punctuator
+    - selector
+    - navigator
+    - express_editor
+  segmentors:
+    - ascii_segmentor
+    - matcher
+    - abc_segmentor
+    - punct_segmentor
+    - fallback_segmentor
+  translators:
+    - echo_translator
+    - punct_translator
+    - table_translator
+    - reverse_lookup_translator
+
+speller:
+  alphabet: ',.abcdefghijklmnopqrstuvwxyz'
+  initials: 'abcdefghijklmnopqrstuvwxyz'
+  delimiter: " '"
+  max_code_length: 6
+
+translator:
+  dictionary: zrm2000
+
+punctuator:
+  import_preset: default
+
+key_binder:
+  import_preset: default
+  bindings:
+# has_menu 对应有候选词的条件
+# paging   对应已经有翻页动作的条件
+    - { when: has_menu, accept: semicolon, send: 2 }            # 第2候选键(;)
+    - { when: has_menu, accept: apostrophe, send: 3 }           # 第3候选键(')
+    #- { when: has_menu, accept: minus, send: Page_Up }          # 前翻页键(-):定义has_menu而非paging.候选首页未后移/后翻,确保前翻页键无动作
+    #- { when: has_menu, accept: equal, send: Page_Down }        # 后翻页键(=)
+    - { when: has_menu, accept: bracketleft, send: Page_Up }    # 前翻页键([):定义has_menu而非paging.候选首页未后移/后翻,确保前翻页键无动作
+    - { when: has_menu, accept: bracketright, send: Page_Down } # 后翻页键(])
+    - { when: has_menu, accept: comma, send: comma }            # 屏蔽default.yaml定义的前翻键(,)
+    - { when: has_menu, accept: period, send: period }          # 屏蔽default.yaml定义的后翻键(.)
+
+recognizer:
+  import_preset: default

@@ -4,7 +4,7 @@
 schema:
   schema_id: double_pinyin_plus
   name: 自然码双拼+
-  version: "0.15.custom.mutoe.2"
+  version: "0.15.custom.mutoe.3"
   author:
     - 佛振 <chen.sst@gmail.com>
     - mutoe <mutoe@foxmail.com>
@@ -12,8 +12,10 @@ schema:
     基于朙月拼音＋自然碼雙拼原方案。
     - 增加自定义词库(custom phrase)。
     - 增加英文输入支持
+    - 增加自然码辅码支持(自然码2000)
   dependencies:
     - stroke
+    - zrm2000
     - english
 
 switches:
@@ -49,6 +51,7 @@ engine:
     - reverse_lookup_translator
     - table_translator@english
     - table_translator@custom_phrase
+    - table_translator@zrm2000
     - script_translator
   filters:
     - simplifier
@@ -69,8 +72,14 @@ english:
   spelling_hints: 9
   initial_quality: 0
 
+zrm2000:
+  dictionary: zrm2000
+  enable_sentence: true
+  max_phrase_length: 6
+
 speller:
-  alphabet: zyxwvutsrqponmlkjihgfedcba
+  alphabet: zyxwvutsrqponmlkjihgfedcba.,
+  initials: abcdefghijklmnopqrstuvwxyz
   delimiter: " '"
   algebra:
     - erase/^xx$/
@@ -147,6 +156,11 @@ punctuator:
 
 key_binder:
   import_preset: default
+  bindings:
+    - { when: has_menu, accept: bracketleft, send: Page_Up } # 前翻页键 "["
+    - { when: has_menu, accept: bracketright, send: Page_Down } # 后翻页键 "]"
+    - { when: has_menu, accept: comma, send: comma } # 禁用前翻页键 "."
+    - { when: has_menu, accept: period, send: period } # 禁用后翻页键 ","
 
 recognizer:
   import_preset: default
