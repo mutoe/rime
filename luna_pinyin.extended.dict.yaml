@@ -42,7 +42,7 @@ use_preset_vocabulary: true
 #雙拼不支持 luna_pinyin.cn_en 詞庫，請用戶手動禁用。
 import_tables:
   - luna_pinyin
-  # - luna_pinyin.hanyu
+  - luna_pinyin.hanyu
   # - luna_pinyin.poetry
   - luna_pinyin.cn_en
 ...
@@ -124367,7 +124367,6 @@ import_tables:
 㞞包蛋		1
 㞞包軟蛋		1
 
-#以下爲需要保留注音防止多音字註音錯誤的詞彙
 一丁目	yi ding mu	1
 一不小心被	yi bu xiao xin bei	1
 一不留神	yi bu liu shen	1
