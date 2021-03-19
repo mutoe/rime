@@ -36,3 +36,7 @@ patch:
       ascii_mode: true
     com.googlecode.iterm2:
       ascii_mode: true
+    com.jetbrains.intellij:
+      ascii_mode: true
+      # vim_mode: true
+
